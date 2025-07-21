@@ -87,13 +87,17 @@ After=graphical.target
 Type=simple
 ExecStart=/usr/local/share/kmonad/start-kmonad.sh
 Restart=always
-User=root
+User=youruser
+Group=input
+Environment=PATH=/usr/bin:/usr/local/bin
 
 [Install]
 WantedBy=multi-user.target
 ```
 
 ---
+
+Dont forget to add your user to the input Group
 
 ## Step 7 – Enable and Start the Service
 
