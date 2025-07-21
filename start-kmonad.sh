@@ -1,18 +1,21 @@
 #!/bin/bash
 set -e
 
-# Kill any existing ydotoold (if running)
 pkill -x ydotoold || true
-
-# Start ydotoold in the background
 ydotoold &
 YDOTOOL_PID=$!
-
-# Wait for ydotoold to initialize
 sleep 1
 
-# Start KMonad with config
-/usr/local/bin/kmonad "$(dirname "$0")/keyboard.kbd"
+echo "Starting KMonad for external keyboard..."
+/usr/local/bin/kmonad "$(dirname "$0")/keyboard.kbd" &
+KMONAD_INTERNAL_PID=$!
 
-# When KMonad exits, also kill ydotoold
+echo "Starting KMonad for internal keyboard..."
+/usr/local/bin/kmonad "$(dirname "$0")/bkey.kbd" &
+KMONAD_EXTERNAL_PID=$!
+
+echo "Both KMonad instances are running."
+wait $KMONAD_INTERNAL_PID $KMONAD_EXTERNAL_PID
+
 kill $YDOTOOL_PID
+echo "ydotoold killed."
